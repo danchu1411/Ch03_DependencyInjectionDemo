@@ -8,16 +8,25 @@ public class ProductRepository : IProductRepository
 {
     private readonly AppDbContext _context;
 
-    // Constructor Injection: DbContext duoc container dua vao
-    public ProductRepository(AppDbContext context) => _context = context;
-
-    public Guid InstanceId { get; } = Guid.NewGuid();
+    public ProductRepository(AppDbContext context)
+    {
+        _context = context;
+    }
 
     public Task<List<Product>> GetAllAsync()
-        => _context.Products.Include(p => p.Category).AsNoTracking().ToListAsync();
+    {
+        return _context.Products
+            .Include(p => p.Category)
+            .AsNoTracking()
+            .ToListAsync();
+    }
 
     public Task<Product?> GetByIdAsync(int id)
-        => _context.Products.Include(p => p.Category).FirstOrDefaultAsync(p => p.Id == id);
+    {
+        return _context.Products
+            .Include(p => p.Category)
+            .FirstOrDefaultAsync(p => p.Id == id);
+    }
 
     public async Task AddAsync(Product product)
     {
@@ -25,5 +34,25 @@ public class ProductRepository : IProductRepository
         await _context.SaveChangesAsync();
     }
 
-    public Task<int> CountAsync() => _context.Products.CountAsync();
+    public async Task UpdateAsync(Product product)
+    {
+        _context.Products.Update(product);
+        await _context.SaveChangesAsync();
+    }
+
+    public async Task DeleteAsync(int id)
+    {
+        var product = await _context.Products.FindAsync(id);
+
+        if (product == null)
+            return;
+
+        _context.Products.Remove(product);
+        await _context.SaveChangesAsync();
+    }
+
+    public Task<int> CountAsync()
+    {
+        return _context.Products.CountAsync();
+    }
 }
