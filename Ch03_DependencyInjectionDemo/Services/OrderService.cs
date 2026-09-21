@@ -43,7 +43,9 @@ public class OrderService : IOrderService
 
         product.Quantity -= quantity;
 
-        await _orderRepository.AddAsync(order);
+        _context.Orders.Add(order);
+
+        await _context.SaveChangesAsync();
 
         return true;
     }

@@ -686,9 +686,12 @@ internal class Program
         if (success)
         {
             Console.WriteLine("Tạo Order thành công.");
+
+            var updatedProduct =
+                await productService.GetByIdAsync(productId);
+
             Console.WriteLine(
-                $"Tồn kho còn lại: " +
-                $"{product.Quantity - quantity}");
+                $"Tồn kho còn lại: {updatedProduct?.Quantity}");
         }
         else
         {
