@@ -45,6 +45,15 @@ public class CategoryRepository : ICategoryRepository
         if (category == null)
             return;
 
+        bool hasProducts = await _context.Products
+            .AnyAsync(p => p.CategoryId == id);
+
+        if (hasProducts)
+        {
+            throw new InvalidOperationException(
+                "Không thể xóa Category vì đang có Product thuộc Category này.");
+        }
+
         _context.Categories.Remove(category);
         await _context.SaveChangesAsync();
     }

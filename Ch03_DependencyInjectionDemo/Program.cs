@@ -53,11 +53,35 @@ internal class Program
 
         while (true)
         {
+            Console.WriteLine();
+            Console.WriteLine("===== CATEGORY MANAGEMENT =====");
+            Console.WriteLine("1. Danh sách Categories");
+            Console.WriteLine("2. Thêm Category");
+            Console.WriteLine("3. Sửa Category");
+            Console.WriteLine("4. Xóa Category");
+            Console.WriteLine("0. Thoat");
+            Console.Write("Chon chuc nang: ");
 
             switch (Console.ReadLine()?.Trim())
             {
 
             }
+        }
+    }
+
+    static async Task ShowCategoriesAsync(
+    ICategoryService service)
+    {
+        var categories = await service.GetAllAsync();
+
+        Console.WriteLine();
+        Console.WriteLine("===== CATEGORIES =====");
+        Console.WriteLine("ID\tName");
+
+        foreach (var category in categories)
+        {
+            Console.WriteLine(
+                $"{category.Id}\t{category.Name}");
         }
     }
 }

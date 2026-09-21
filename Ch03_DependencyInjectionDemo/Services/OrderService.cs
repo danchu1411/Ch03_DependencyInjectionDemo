@@ -45,8 +45,6 @@ public class OrderService : IOrderService
 
         await _orderRepository.AddAsync(order);
 
-        await _context.SaveChangesAsync();
-
         return true;
     }
 
