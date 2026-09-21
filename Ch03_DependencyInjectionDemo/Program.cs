@@ -42,12 +42,13 @@ internal class Program
 
         var host = builder.Build();
 
-        // ---------- Code First: tao database neu chua co ----------
+        // ---------- Db First ----------
         using (var scope = host.Services.CreateScope())
         {
             var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-            await db.Database.MigrateAsync();
-            Console.WriteLine($"[DB] San sang. Hien co {await db.Products.CountAsync()} san pham.");
+
+            Console.WriteLine(
+                $"[DB] San sang. Hien co {await db.Products.CountAsync()} san pham.");
         }
 
         while (true)
