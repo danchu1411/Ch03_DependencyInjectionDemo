@@ -1,6 +1,5 @@
 using System.Text;
 using Ch03_DependencyInjectionDemo.Data;
-using Ch03_DependencyInjectionDemo.Demos;
 using Ch03_DependencyInjectionDemo.Repositories;
 using Ch03_DependencyInjectionDemo.Services;
 using Microsoft.EntityFrameworkCore;
@@ -31,14 +30,15 @@ internal class Program
         // AddDbContext: lifetime Scoped
         builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlServer(connectionString));
 
-        builder.Services.AddSingleton<IAppLogger, ConsoleLogger>();
-
-        // Doi mot dong duoi day sang SmsNotificationService la doi toan bo kenh thong bao
-        // ma KHONG can sua ProductService - do la loi ich cua Dependency Inversion.
-        builder.Services.AddScoped<INotificationService, EmailNotificationService>();
+        builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
+        builder.Services.AddScoped<ICategoryService, CategoryService>();
 
         builder.Services.AddScoped<IProductRepository, ProductRepository>();
         builder.Services.AddScoped<IProductService, ProductService>();
+
+        builder.Services.AddScoped<IOrderRepository, OrderRepository>();
+        builder.Services.AddScoped<IOrderService, OrderService>();
+
 
         var host = builder.Build();
 
@@ -53,30 +53,10 @@ internal class Program
 
         while (true)
         {
-            Console.WriteLine();
-            Console.WriteLine("===== PRN222 - Chapter 03: Dependency Injection in .NET =====");
-            Console.WriteLine("1. Nguyen tac SOLID (S, O, L, I, D)");
-            Console.WriteLine("2. Inversion of Control - co va khong co container");
-            Console.WriteLine("3. Service Lifetimes - Transient / Scoped / Singleton");
-            Console.WriteLine("4. 4 kieu DI: Constructor / Property / Method / Ambient Context");
-            Console.WriteLine("5. Chay tat ca");
-            Console.WriteLine("0. Thoat");
-            Console.Write("Chon chuc nang: ");
 
             switch (Console.ReadLine()?.Trim())
             {
-                case "1": SolidAndPatternDemo.RunSolid(); break;
-                case "2": SolidAndPatternDemo.RunIoC(); break;
-                case "3": LifetimeDemo.Run(connectionString); break;
-                case "4": await SolidAndPatternDemo.RunInjectionPatternsAsync(host.Services); break;
-                case "5":
-                    SolidAndPatternDemo.RunSolid();
-                    SolidAndPatternDemo.RunIoC();
-                    LifetimeDemo.Run(connectionString);
-                    await SolidAndPatternDemo.RunInjectionPatternsAsync(host.Services);
-                    break;
-                case "0": return;
-                default: Console.WriteLine("Lua chon khong hop le."); break;
+
             }
         }
     }
