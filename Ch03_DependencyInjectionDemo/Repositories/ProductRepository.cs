@@ -47,6 +47,15 @@ public class ProductRepository : IProductRepository
         if (product == null)
             return;
 
+        bool hasOrders = await _context.Orders
+            .AnyAsync(o => o.ProductId == id);
+
+        if (hasOrders)
+        {
+            throw new InvalidOperationException(
+                "Không thể xóa Product vì Product này đã có Order.");
+        }
+
         _context.Products.Remove(product);
         await _context.SaveChangesAsync();
     }
