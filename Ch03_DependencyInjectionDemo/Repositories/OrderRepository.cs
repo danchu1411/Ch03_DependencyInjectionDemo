@@ -31,7 +31,8 @@ public class OrderRepository : IOrderRepository
     public async Task<decimal> GetTotalRevenueAsync()
     {
         return await _context.Orders
-            .SumAsync(o => o.TotalAmount);
+            .Select(o => (decimal?)o.TotalAmount)
+            .SumAsync() ?? 0;
     }
 
     public Task<int> CountByDateAsync(DateTime from, DateTime to)
